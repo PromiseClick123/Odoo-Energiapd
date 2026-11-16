@@ -1,15 +1,19 @@
 # Odoo-Energiapd
 
-Página de "Cargando…" que redirige automáticamente tras 4 segundos.
+Página de inicio de sesión (reforzamiento) portada desde el componente React
+`InicioReforzamientoPage.tsx` a HTML estático para GitHub Pages.
+
+Al iniciar sesión registra el acceso (mejor esfuerzo) y redirige a la suite privada.
 
 ## Configurar destino
 
 Edita `public/index.html` y cambia:
 
 ```js
-const REDIRECT_URL = "https://example.com";
-const SECONDS = 4;
+const URL_SUITE_PRIVADA = 'http://89.167.20.163:8080';
 ```
+
+El fondo está en `public/reforzamiento/fondo-login.webp` y el logo es un SVG inline.
 
 ## Probar en local
 
