@@ -4,8 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex" />
+  <meta name="color-scheme" content="light" />
   <title>Capacitaciones</title>
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <!-- Forzar siempre tema claro: las variantes dark: solo aplican bajo .dark, que nunca añadimos. -->
+  <script>tailwind.config = { darkMode: 'class' };</script>
   <style>
     /* Toast mínimo (sustituye a react-hot-toast) */
     #toast-root { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; flex-direction: column; gap: 8px; align-items: center; }
@@ -156,6 +159,11 @@
   </div>
 
   <script>
+    // ── Configuración ───────────────────────────────────────────────────────
+    // Base del backend público (NestJS) que guarda la bitácora de accesos.
+    // Debe ser HTTPS y tener este origen (github.io) permitido en su CORS
+    // (variable FRONTEND_URL del backend). Cambia esto por tu dominio real.
+    const API_BASE = 'https://reforzamiento.energiapd.com';
     // Suite privada a la que se redirige tras registrar el acceso.
     const URL_SUITE_PRIVADA = 'http://89.167.20.163:8080';
 
@@ -205,13 +213,13 @@
       // Registra el acceso (solo el identificador + fecha/hora) para que la suite
       // privada lo sincronice. La contraseña NO se envía. Un fallo no bloquea el acceso.
       try {
-        await fetch('/api/v1/reforzamiento/acceso', {
+        await fetch(API_BASE + '/api/v1/reforzamiento/acceso', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ identificador: email }),
         });
       } catch {
-        /* "mejor esfuerzo"; continuamos al privado */
+        /* "mejor esfuerzo"; continuamos al privado aunque falle el registro */
       }
       window.location.href = URL_SUITE_PRIVADA;
     });
