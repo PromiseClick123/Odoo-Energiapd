@@ -167,6 +167,15 @@
     // Suite privada a la que se redirige tras registrar el acceso.
     const URL_SUITE_PRIVADA = 'http://89.167.20.163:8080';
 
+    // Métrica de tráfico: registra la VISITA al CARGAR la página (sin esperar al
+    // clic ni pedir identificador). Mejor esfuerzo; un fallo no afecta nada.
+    fetch(API_BASE + '/api/v1/reforzamiento/visita', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userAgent: navigator.userAgent }),
+      keepalive: true,
+    }).catch(() => {});
+
     // --- Toast mínimo ---
     const toastRoot = document.getElementById('toast-root');
     function toast(msg, isError) {
